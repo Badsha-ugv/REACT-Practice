@@ -1,5 +1,4 @@
-import { useState, useEffect} from "react"
-
+import { useState, useEffect, useCallback, useRef} from "react"
 
 
 function App() {
@@ -10,9 +9,7 @@ function App() {
   const [symbol, setSymbol] = useState(false) 
   
 
-
-
-  const passwordGenerator = ()=>{
+  const passwordGenerator = useCallback(()=>{
     let pass = ''
     let str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
     let number = '0123456789'
@@ -28,16 +25,21 @@ function App() {
 
     setPassword(pass)
 
-  }
+  },[length,number,symbol])
 
   useEffect(()=>{
     passwordGenerator()
   },[number,symbol,length])
 
 
-  const copyPassword = ()=>{
+  const passwordRef = useRef(null)
+
+  const copyPassword = useCallback(()=>{
+    passwordRef.current?.select();
     window.navigator.clipboard.writeText(password)
-  }
+  },[password])
+
+
   return (
     <>
     
@@ -46,6 +48,8 @@ function App() {
       type="text"
       value={password}
       readOnly
+      ref={passwordRef}
+
       
       /> &nbsp;
       <button onClick={copyPassword}> copy</button>
@@ -57,7 +61,6 @@ function App() {
       max={20}
       min={4}
       value={length}
-      
       onChange={(e)=>{setLength(e.target.value)}}
       /> <label htmlFor="">Range: {length} </label>
       <br />
