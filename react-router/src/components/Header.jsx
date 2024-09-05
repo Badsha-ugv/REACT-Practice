@@ -24,6 +24,15 @@ function Header() {
                 </NavLink>
         
             </li>
+            <li className='p-3 text-white '>
+                <NavLink
+                to='/github'
+                className={({isActive})=>`${ isActive ? 'bg-blue-700' : 'bg-transparent'}`}
+                >
+                    Github
+                </NavLink>
+        
+            </li>
         </ul>
       </div>
     </>
