@@ -1,39 +1,63 @@
 import React from 'react'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { addTodo } from '../../redux/slice/todoSlice';
+import { addTodo, updateTodo } from '../../redux/slice/todoSlice';
 
-function TodoForm() {
+function TodoForm({newTodo, setNewTodo}) {
 
     const dispatch = useDispatch();
     const [todo, setTodo] = useState('')
 
     const formControl = (e)=>{
         e.preventDefault();
-        dispatch(addTodo(todo))
-        setTodo('')
+
+        if(newTodo){
+          dispatch(updateTodo({todoId:newTodo.id, todoTitle:todo}))
+          setTodo('')
+        }
+        else{
+          
+          dispatch(addTodo(todo))
+          setTodo('')
+        }
 
     }
+
+    useEffect(()=>{
+      if(newTodo){
+        setTodo(newTodo.title)
+      }
+      else{
+        setTodo('')
+      }
+    },[newTodo])
+
+
   return (
     <div>
       <div className="container">
-        <div className="row">
-            <div className="col-8 mx-auto">
+       
                 <h3 className='text-center py-3'>Create New Todo Item</h3>
-
-                <form 
-                className=' d-flex gap-3' 
+              <div className='w-50 border p-3 mx-auto '>
+              <form 
+                className='' 
                 onSubmit={formControl}>
-                    <input type="text"  className="form-control" 
+                  <div className="d-flex justify-content-center gap-2 ">
+
+                    <input type="text" placeholder='write title..' className="form-control w-75 d-inline" 
                     value={todo}
                     onChange={(e)=>setTodo(e.target.value)}
                     />
-                    <button type='submit' className='btn btn-info'>Add Todo</button>
+                    <button type='submit' className='btn btn-info'>{newTodo? 'Update':'Add'} Todo</button>
+                    
+                    </div>
                 </form>
 
+              </div>
+                
+
             </div>
-        </div>
-      </div>
+       
     </div>
   )
 }
